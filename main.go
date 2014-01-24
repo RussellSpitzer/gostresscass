@@ -62,11 +62,11 @@ func stress(num_ops int) {
 }
 
 func insert(session *gocql.Session) {
-	query := session.Query(`INSERT INTO stress_table (key1,key2,key3,col1,col2,col3) VALUES (?,?,?,?,?,?)`)
 	for value := range ops_insert {
-		if err := query.Scan(&value[0], &value[1], &value[2], &value[3], &value[4], &value[5]); err != nil {
+		query := session.Query(`INSERT INTO stress_table (key1,key2,key3,col1,col2,col3) VALUES (?,?,?,?,?,?)`, value[0], value[1], value[2], value[3], value[4], value[5])
+		if err := query.Exec(); err != nil {
+			log.Fatal(err)
 		}
-
 	}
 	done <- true
 
